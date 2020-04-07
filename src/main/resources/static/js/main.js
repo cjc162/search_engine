@@ -32,7 +32,8 @@ function fire_ajax_submit() {
 
             console.log("SUCCESS : ", data);
             $("#btnSubmit").prop("disabled", false);
-            $(location).attr('href', 'http://localhost:8085/actions')
+            
+            $(location).attr('href', location.origin + '/actions');
 
         },
         error: function (e) {
@@ -40,7 +41,7 @@ function fire_ajax_submit() {
             $("#result").text(e.responseText);
             console.log("ERROR : ", e);
             $("#btnSubmit").prop("disabled", false);
-
+			
         }
     });
 

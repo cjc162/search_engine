@@ -35,44 +35,10 @@ public class IndexController {
 			@RequestParam(value = "term", required = false) String term,
 			Model model
 	) throws IOException {		
-		if (term != null && !term.isEmpty()) {
-			makeJob(term);
-			
+		if (term != null && !term.isEmpty()) {			
 			model.addAttribute("term", "Searching for term: " + term);
 		}
 		
 		return "actions.html";
-	}
-	
-	private static void makeJob(String term) throws IOException {
-		RestUploadController.deleteObject("utility-vista-273402", "dataproc-staging-us-west1-388522857539-gkh9vufp", "output/");
-		RestUploadController.deleteObject("utility-vista-273402", "dataproc-staging-us-west1-388522857539-gkh9vufp", "output.txt");
-		
-		Random rand = new Random(); 
-		
-		Collection<String> scopes = new ArrayList<String>();
-		scopes.add("https://www.googleapis.com/auth/cloud-platform");
-		
-		GoogleCredential cred = GoogleCredential.getApplicationDefault().createScoped(scopes);
-		
-		Dataproc dataproc = new Dataproc.Builder(new NetHttpTransport(), new JacksonFactory(), cred)
-				.build();
-		
-		dataproc.projects().regions().jobs().submit("utility-vista-273402", "us-west1", new SubmitJobRequest()
-				.setJob(new Job()
-						.setPlacement(new JobPlacement()
-								.setClusterName("search-engine")
-								.setClusterUuid("a7a6708e-4ff5-4dc2-bf7c-15d2e70e7ffc"))
-						.setReference(new JobReference()
-								.setProjectId("utility-vista-273402")
-								.setJobId("search-engine-job-" + rand.nextInt(999999999)))
-						.setHadoopJob(new HadoopJob()
-								.setMainClass("WordCount")
-								.setJarFileUris(ImmutableList.of("gs://dataproc-staging-us-west1-388522857539-gkh9vufp/JAR/WordCount.jar"))
-								.setArgs(ImmutableList.of(
-										"gs://dataproc-staging-us-west1-388522857539-gkh9vufp/data/", 
-										"gs://dataproc-staging-us-west1-388522857539-gkh9vufp/output",
-										term)))))
-		.execute();
 	}
 }
