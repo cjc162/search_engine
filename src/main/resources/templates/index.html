@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org/">
+<head>
+	<link rel="stylesheet" type="text/css" th:href="@{css/style.css}">
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<h1>Corey Catalogna Search Engine</h1>
+	<h2>Load My Engine</h2>
+
+	<form method="POST" enctype="multipart/form-data" id="fileUploadForm">
+		<label>Select files (hold ctrl for multiple files):</label>
+	  	<input type="file" th:name="files" multiple><br>
+	  	<input type="submit" value="Submit Files" id="btnSubmit">
+	</form>
+
+    <span id="result"></span>
+
+	<script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript" th:src="@{js/main.js}"></script>
+</body>
+</html>

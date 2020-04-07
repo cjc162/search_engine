@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org/">
+<head>
+	<link rel="stylesheet" type="text/css" th:href="@{css/style.css}">
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<h1>Corey Catalogna Search Engine</h1>
+	<h2>Engine was Loaded & Inverted Indicies were Constructed!</h2>
+
+	<form th:action="@{/actions}">
+		<label>Enter Your Search Term:</label>
+	  	<input type="text" th:name="term" autocomplete="off"><br>
+	  	<input type="submit" value="Search">
+	</form>
+
+	<p th:text=${term}>Enter Term to Search For</p>
+</body>
+</html>
