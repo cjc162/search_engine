@@ -28,6 +28,8 @@ import com.google.cloud.storage.StorageOptions;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -91,33 +93,40 @@ public class RestUploadController {
     }
     
     public static void uploadObject(String projectId, String bucketName, String objectName, byte[] bytes) throws IOException {    	  
-    	  	Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
-    	    BlobId blobId = BlobId.of(bucketName, objectName);
-    	    BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-    	    storage.create(blobInfo, bytes);
+	  	Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+	    BlobId blobId = BlobId.of(bucketName, objectName);
+	    BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+	    storage.create(blobInfo, bytes);
     }
     
     public static void deleteObjects(String projectId, String bucketName, Page<Blob> blobs) {
-    	    Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
-    	    
-    	    for (Blob blob : blobs.iterateAll()) {
-        	    storage.delete(bucketName, blob.getName());
-    	    }
+	    Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+	    
+	    for (Blob blob : blobs.iterateAll()) {
+    	    storage.delete(bucketName, blob.getName());
+	    }
     }
+    
+    public static void downloadOutput() {
+    	Storage storage = StorageOptions.newBuilder().setProjectId("utility-vista-273402").build().getService();
+    	Path destFilePath = Paths.get("./output.txt");
+    	Blob blob = storage.get(BlobId.of("dataproc-staging-us-west1-388522857539-gkh9vufp", "output.txt"));
+    	blob.downloadTo(destFilePath);
+   }
     
     public static void deleteObject(String projectId, String bucketName, String name) {
 	    Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
 	    
-    	 storage.delete(bucketName, name);
+    	storage.delete(bucketName, name);
     }
     
     public static Page<Blob> listObjectsWithPrefix(String projectId, String bucketName, String directoryPrefix) {
-    	    Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
-    	    Bucket bucket = storage.get(bucketName);
+	    Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+	    Bucket bucket = storage.get(bucketName);
 
-    	    Page<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(directoryPrefix), Storage.BlobListOption.currentDirectory());
-    	    
-    	    return blobs;
+	    Page<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(directoryPrefix), Storage.BlobListOption.currentDirectory());
+	    
+	    return blobs;
     }
     
 	public static String makeJob() throws IOException, InterruptedException {
@@ -163,7 +172,7 @@ public class RestUploadController {
 		
 		GoogleCredential cred = GoogleCredential.getApplicationDefault().createScoped(scopes);
 		
-		Dataproc dataproc = new Dataproc.Builder(new NetHttpTransport(), new JacksonFactory(), cred).build();
+		Dataproc dataproc = new Dataproc.Builder(new NetHttpTransport(), new JacksonFactory(), cred).setApplicationName("my-webabb/1.0").build();
 		
 		return dataproc.projects().regions().jobs().get("utility-vista-273402", "us-west1", jobId).execute().getStatus().getState();
 	}

@@ -16,5 +16,16 @@
 	</form>
 
 	<p th:text=${term}>Enter Term to Search For</p>
+
+	<table>
+		<tr>
+			<th>Doc Name</th>
+			<th>Frequency</th>
+		</tr>
+		<tr th:each="file : ${map}">
+			<td th:text="${file.key}"></td>
+			<td th:text="${file.value}"></td>
+		</tr>
+	</table>
 </body>
 </html>
