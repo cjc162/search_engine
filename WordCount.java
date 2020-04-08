@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -67,5 +69,26 @@ public class WordCount {
   	job.setOutputKeyClass(Text.class);
   	job.setOutputValueClass(Text.class);
   	job.waitForCompletion(true);
+
+  	runMergeScript();
+  }
+
+  public static void runMergeScript() throws IOException, InterruptedException { 
+    Process p = Runtime.getRuntime().exec("sh /home/csquarehd/merge.sh");
+    p.waitFor();
+
+    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+    BufferedReader errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+
+    String line = "";
+    while ((line = reader.readLine()) != null) {
+        System.out.println(line);
+    }
+
+    line = "";
+    while ((line = errorReader.readLine()) != null) {
+        System.out.println(line);
+    }
   }
 }
