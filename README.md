@@ -9,3 +9,6 @@
 - First Java Application Implementation and Execution on Docker
 - Docker to GCP Cluster Communication
 - Inverted Indexing MapReduce Implementation and Execution on the the Cluster (GCP)
+
+# Video Walk Through
+- My four-part video can be found in the video walkthrough folder (https://github.com/cjc162/search_engine/tree/master/video%20walkthrough)
